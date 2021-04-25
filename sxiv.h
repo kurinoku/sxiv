@@ -33,6 +33,8 @@
  */
 #define CLEANUP
 
+#define LIBSXIV_EXPORT __attribute__((__visibility__("default")))
+
 #ifndef MIN
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 #endif
@@ -147,10 +149,10 @@ struct arl {
 	char *filename;
 };
 
-void arl_init(arl_t*);
-void arl_cleanup(arl_t*);
-void arl_setup(arl_t*, const char* /* result of realpath(3) */);
-bool arl_handle(arl_t*);
+LIBSXIV_EXPORT void arl_init(arl_t*);
+LIBSXIV_EXPORT void arl_cleanup(arl_t*);
+LIBSXIV_EXPORT void arl_setup(arl_t*, const char* /* result of realpath(3) */);
+LIBSXIV_EXPORT bool arl_handle(arl_t*);
 
 
 /* commands.c */
@@ -186,7 +188,7 @@ typedef struct {
 	arg_t arg;
 } button_t;
 
-extern const cmd_t cmds[CMD_COUNT];
+extern const cmd_t cmds[CMD_COUNT] LIBSXIV_EXPORT;
 
 
 /* image.c */
@@ -234,24 +236,24 @@ struct img {
 	multi_img_t multi;
 };
 
-void img_init(img_t*, win_t*);
-bool img_load(img_t*, const fileinfo_t*);
-CLEANUP void img_close(img_t*, bool);
-void img_render(img_t*);
-bool img_fit_win(img_t*, scalemode_t);
-bool img_zoom(img_t*, float);
-bool img_zoom_in(img_t*);
-bool img_zoom_out(img_t*);
-bool img_pos(img_t*, float, float);
-bool img_move(img_t*, float, float);
-bool img_pan(img_t*, direction_t, int);
-bool img_pan_edge(img_t*, direction_t);
-void img_rotate(img_t*, degree_t);
-void img_flip(img_t*, flipdir_t);
-void img_toggle_antialias(img_t*);
-bool img_change_gamma(img_t*, int);
-bool img_frame_navigate(img_t*, int);
-bool img_frame_animate(img_t*);
+LIBSXIV_EXPORT void img_init(img_t*, win_t*);
+LIBSXIV_EXPORT bool img_load(img_t*, const fileinfo_t*);
+LIBSXIV_EXPORT CLEANUP void img_close(img_t*, bool);
+LIBSXIV_EXPORT void img_render(img_t*);
+LIBSXIV_EXPORT bool img_fit_win(img_t*, scalemode_t);
+LIBSXIV_EXPORT bool img_zoom(img_t*, float);
+LIBSXIV_EXPORT bool img_zoom_in(img_t*);
+LIBSXIV_EXPORT bool img_zoom_out(img_t*);
+LIBSXIV_EXPORT bool img_pos(img_t*, float, float);
+LIBSXIV_EXPORT bool img_move(img_t*, float, float);
+LIBSXIV_EXPORT bool img_pan(img_t*, direction_t, int);
+LIBSXIV_EXPORT bool img_pan_edge(img_t*, direction_t);
+LIBSXIV_EXPORT void img_rotate(img_t*, degree_t);
+LIBSXIV_EXPORT void img_flip(img_t*, flipdir_t);
+LIBSXIV_EXPORT void img_toggle_antialias(img_t*);
+LIBSXIV_EXPORT bool img_change_gamma(img_t*, int);
+LIBSXIV_EXPORT bool img_frame_navigate(img_t*, int);
+LIBSXIV_EXPORT bool img_frame_animate(img_t*);
 
 
 /* options.c */
@@ -287,7 +289,7 @@ struct opt {
 	bool private_mode;
 };
 
-extern const opt_t *options;
+extern const opt_t *options LIBSXIV_EXPORT;
 
 void print_usage(void);
 void print_version(void);
@@ -326,18 +328,18 @@ struct tns {
 	bool dirty;
 };
 
-void tns_clean_cache(tns_t*);
-void tns_init(tns_t*, fileinfo_t*, const int*, int*, win_t*);
-CLEANUP void tns_free(tns_t*);
-bool tns_load(tns_t*, int, bool, bool);
-void tns_unload(tns_t*, int);
-void tns_render(tns_t*);
-void tns_mark(tns_t*, int, bool);
-void tns_highlight(tns_t*, int, bool);
-bool tns_move_selection(tns_t*, direction_t, int);
-bool tns_scroll(tns_t*, direction_t, bool);
-bool tns_zoom(tns_t*, int);
-int tns_translate(tns_t*, int, int);
+LIBSXIV_EXPORT void tns_clean_cache(tns_t*);
+LIBSXIV_EXPORT void tns_init(tns_t*, fileinfo_t*, const int*, int*, win_t*);
+LIBSXIV_EXPORT CLEANUP void tns_free(tns_t*);
+LIBSXIV_EXPORT bool tns_load(tns_t*, int, bool, bool);
+LIBSXIV_EXPORT void tns_unload(tns_t*, int);
+LIBSXIV_EXPORT void tns_render(tns_t*);
+LIBSXIV_EXPORT void tns_mark(tns_t*, int, bool);
+LIBSXIV_EXPORT void tns_highlight(tns_t*, int, bool);
+LIBSXIV_EXPORT bool tns_move_selection(tns_t*, direction_t, int);
+LIBSXIV_EXPORT bool tns_scroll(tns_t*, direction_t, bool);
+LIBSXIV_EXPORT bool tns_zoom(tns_t*, int);
+LIBSXIV_EXPORT int tns_translate(tns_t*, int, int);
 
 
 /* util.c */
@@ -431,18 +433,18 @@ struct win {
 
 extern Atom atoms[ATOM_COUNT];
 
-void win_init(win_t*);
-void win_open(win_t*);
-CLEANUP void win_close(win_t*);
-bool win_configure(win_t*, XConfigureEvent*);
-void win_toggle_fullscreen(win_t*);
-void win_toggle_bar(win_t*);
-void win_clear(win_t*);
-void win_draw(win_t*);
-void win_draw_rect(win_t*, int, int, int, int, bool, int, unsigned long);
-void win_set_title(win_t*, const char*);
-void win_set_cursor(win_t*, cursor_t);
-void win_cursor_pos(win_t*, int*, int*);
+LIBSXIV_EXPORT void win_init(win_t*);
+LIBSXIV_EXPORT void win_open(win_t*);
+LIBSXIV_EXPORT CLEANUP void win_close(win_t*);
+LIBSXIV_EXPORT bool win_configure(win_t*, XConfigureEvent*);
+LIBSXIV_EXPORT void win_toggle_fullscreen(win_t*);
+LIBSXIV_EXPORT void win_toggle_bar(win_t*);
+LIBSXIV_EXPORT void win_clear(win_t*);
+LIBSXIV_EXPORT void win_draw(win_t*);
+LIBSXIV_EXPORT void win_draw_rect(win_t*, int, int, int, int, bool, int, unsigned long);
+LIBSXIV_EXPORT void win_set_title(win_t*, const char*);
+LIBSXIV_EXPORT void win_set_cursor(win_t*, cursor_t);
+LIBSXIV_EXPORT void win_cursor_pos(win_t*, int*, int*);
 
 #endif /* SXIV_H */
 

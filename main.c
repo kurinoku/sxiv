@@ -41,12 +41,17 @@ typedef struct {
 } timeout_t;
 
 /* timeout handler functions: */
-void redraw(void);
-void reset_cursor(void);
-void animate(void);
-void slideshow(void);
-void clear_resize(void);
+LIBSXIV_EXPORT void redraw(void);
+LIBSXIV_EXPORT void reset_cursor(void);
+LIBSXIV_EXPORT void animate(void);
+LIBSXIV_EXPORT void slideshow(void);
+LIBSXIV_EXPORT void clear_resize(void);
 
+appmode_t mode LIBSXIV_EXPORT;
+arl_t arl LIBSXIV_EXPORT;
+img_t img LIBSXIV_EXPORT;
+tns_t tns LIBSXIV_EXPORT;
+win_t win LIBSXIV_EXPORT;
 appmode_t mode;
 arl_t arl;
 img_t img;
@@ -54,15 +59,15 @@ tns_t tns;
 win_t win;
 
 fileinfo_t *files;
-int filecnt, fileidx;
-int alternate;
-int markcnt;
-int markidx;
+int filecnt LIBSXIV_EXPORT, fileidx LIBSXIV_EXPORT;
+int alternate LIBSXIV_EXPORT;
+int markcnt LIBSXIV_EXPORT;
+int markidx LIBSXIV_EXPORT;
 
-int prefix;
-bool extprefix;
+int prefix LIBSXIV_EXPORT;
+bool extprefix LIBSXIV_EXPORT;
 
-bool resized = false;
+bool resized LIBSXIV_EXPORT = false;
 
 typedef struct {
 	int err;
@@ -81,7 +86,7 @@ struct {
 	bool warned;
 } keyhandler;
 
-timeout_t timeouts[] = {
+timeout_t timeouts[] LIBSXIV_EXPORT = {
 	{ { 0, 0 }, false, redraw       },
 	{ { 0, 0 }, false, reset_cursor },
 	{ { 0, 0 }, false, animate      },
@@ -89,11 +94,11 @@ timeout_t timeouts[] = {
 	{ { 0, 0 }, false, clear_resize },
 };
 
-cursor_t imgcursor[3] = {
+cursor_t imgcursor[3] LIBSXIV_EXPORT = {
 	CURSOR_ARROW, CURSOR_ARROW, CURSOR_ARROW
 };
 
-void cleanup(void)
+LIBSXIV_EXPORT void cleanup(void)
 {
 	img_close(&img, false);
 	arl_cleanup(&arl);
@@ -101,7 +106,7 @@ void cleanup(void)
 	win_close(&win);
 }
 
-void check_add_file(char *filename, bool given)
+LIBSXIV_EXPORT void check_add_file(char *filename, bool given)
 {
 	char *path;
 
@@ -129,7 +134,7 @@ void check_add_file(char *filename, bool given)
 	fileidx++;
 }
 
-void remove_file(int n, bool manual)
+LIBSXIV_EXPORT void remove_file(int n, bool manual)
 {
 	if (n < 0 || n >= filecnt)
 		return;
@@ -179,7 +184,7 @@ void set_timeout(timeout_f handler, int time, bool overwrite)
 	}
 }
 
-void reset_timeout(timeout_f handler)
+LIBSXIV_EXPORT void reset_timeout(timeout_f handler)
 {
 	int i;
 
@@ -191,7 +196,7 @@ void reset_timeout(timeout_f handler)
 	}
 }
 
-bool check_timeouts(struct timeval *t)
+LIBSXIV_EXPORT bool check_timeouts(struct timeval *t)
 {
 	int i = 0, tdiff, tmin = -1;
 	struct timeval now;
@@ -216,7 +221,7 @@ bool check_timeouts(struct timeval *t)
 	return tmin > 0;
 }
 
-void close_info(void)
+LIBSXIV_EXPORT void close_info(void)
 {
 	if (info.fd != -1) {
 		kill(info.pid, SIGTERM);
@@ -225,7 +230,7 @@ void close_info(void)
 	}
 }
 
-void open_info(void)
+LIBSXIV_EXPORT void open_info(void)
 {
 	int pfd[2];
 	char w[12], h[12];
@@ -253,7 +258,7 @@ void open_info(void)
 	}
 }
 
-void read_info(void)
+LIBSXIV_EXPORT void read_info(void)
 {
 	ssize_t i, n;
 	char buf[BAR_L_LEN];
@@ -285,7 +290,7 @@ end:
 	close_info();
 }
 
-void load_image(int new)
+LIBSXIV_EXPORT void load_image(int new)
 {
 	bool prev = new < fileidx;
 	static int current;
@@ -321,7 +326,7 @@ void load_image(int new)
 		reset_timeout(animate);
 }
 
-bool mark_image(int n, bool on)
+LIBSXIV_EXPORT bool mark_image(int n, bool on)
 {
 	markidx = n;
 	if (!!(files[n].flags & FF_MARK) != on) {
@@ -334,7 +339,7 @@ bool mark_image(int n, bool on)
 	return false;
 }
 
-void bar_put(win_bar_t *bar, const char *fmt, ...)
+LIBSXIV_EXPORT void bar_put(win_bar_t *bar, const char *fmt, ...)
 {
 	size_t len = bar->size - (bar->p - bar->buf), n;
 	va_list ap;
@@ -347,7 +352,7 @@ void bar_put(win_bar_t *bar, const char *fmt, ...)
 
 #define BAR_SEP "  "
 
-void update_info(void)
+LIBSXIV_EXPORT void update_info(void)
 {
 	unsigned int i, fn, fw;
 	const char * mark;
@@ -389,7 +394,7 @@ void update_info(void)
 	}
 }
 
-int ptr_third_x(void)
+LIBSXIV_EXPORT int ptr_third_x(void)
 {
 	int x, y;
 
@@ -397,7 +402,7 @@ int ptr_third_x(void)
 	return MAX(0, MIN(2, (x / (win.w * 0.33))));
 }
 
-void redraw(void)
+LIBSXIV_EXPORT void redraw(void)
 {
 	int t;
 
@@ -418,7 +423,7 @@ void redraw(void)
 	reset_cursor();
 }
 
-void reset_cursor(void)
+LIBSXIV_EXPORT void reset_cursor(void)
 {
 	int c, i;
 	cursor_t cursor = CURSOR_NONE;
@@ -444,7 +449,7 @@ void reset_cursor(void)
 	win_set_cursor(&win, cursor);
 }
 
-void animate(void)
+LIBSXIV_EXPORT void animate(void)
 {
 	if (img_frame_animate(&img)) {
 		redraw();
@@ -452,13 +457,13 @@ void animate(void)
 	}
 }
 
-void slideshow(void)
+LIBSXIV_EXPORT void slideshow(void)
 {
 	load_image(fileidx + 1 < filecnt ? fileidx + 1 : 0);
 	redraw();
 }
 
-void clear_resize(void)
+LIBSXIV_EXPORT void clear_resize(void)
 {
 	resized = false;
 }
@@ -683,6 +688,8 @@ void on_buttonpress(XButtonEvent *bev)
 
 const struct timespec ten_ms = {0, 10000000};
 
+LIBSXIV_EXPORT void run(void);
+
 void run(void)
 {
 	int xfd;
@@ -815,6 +822,51 @@ void setup_signal(int sig, void (*handler)(int sig))
 	sa.sa_flags = SA_RESTART | SA_NOCLDSTOP;
 	if (sigaction(sig, &sa, 0) == -1)
 		error(EXIT_FAILURE, errno, "signal %d", sig);
+}
+
+LIBSXIV_EXPORT int lib_quickstart()
+{
+	int i;
+
+	setup_signal(SIGCHLD, sigchld);
+	setup_signal(SIGPIPE, SIG_IGN);
+
+	setlocale(LC_COLLATE, "");
+	
+	filecnt = 1024;
+	files = emalloc(filecnt * sizeof(*files));
+	memset(files, 0, filecnt * sizeof(*files));
+	fileidx = 0;
+
+
+	filecnt = fileidx;
+	fileidx = 0;
+
+	for (i = 0; i < ARRLEN(buttons); i++) {
+		if (buttons[i].cmd == i_cursor_navigate) {
+			imgcursor[0] = CURSOR_LEFT;
+			imgcursor[2] = CURSOR_RIGHT;
+			break;
+		}
+	}
+
+	win_init(&win);
+	img_init(&img, &win);
+	arl_init(&arl);
+
+	info.fd = -1;
+
+	mode = MODE_IMAGE;
+	tns.thumbs = NULL;
+
+	current_quarter_drag = QD_CENTER;
+
+	win_open(&win);
+	win_set_cursor(&win, CURSOR_WATCH);
+	set_timeout(redraw, 25, false);
+
+	run();
+	return 0;
 }
 
 int main(int argc, char **argv)

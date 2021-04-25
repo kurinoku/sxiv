@@ -52,7 +52,7 @@ extern int markidx;
 extern int prefix;
 extern bool extprefix;
 
-bool cg_quit(arg_t _)
+LIBSXIV_EXPORT bool cg_quit(arg_t _)
 {
 	unsigned int i;
 
@@ -65,7 +65,7 @@ bool cg_quit(arg_t _)
 	exit(EXIT_SUCCESS);
 }
 
-bool cg_switch_mode(arg_t _)
+LIBSXIV_EXPORT bool cg_switch_mode(arg_t _)
 {
 	if (mode == MODE_IMAGE) {
 		if (tns.thumbs == NULL)
@@ -85,7 +85,7 @@ bool cg_switch_mode(arg_t _)
 	return true;
 }
 
-bool cg_toggle_fullscreen(arg_t _)
+LIBSXIV_EXPORT bool cg_toggle_fullscreen(arg_t _)
 {
 	win_toggle_fullscreen(&win);
 	/* redraw after next ConfigureNotify event */
@@ -97,7 +97,7 @@ bool cg_toggle_fullscreen(arg_t _)
 	return false;
 }
 
-bool cg_toggle_bar(arg_t _)
+LIBSXIV_EXPORT bool cg_toggle_bar(arg_t _)
 {
 	win_toggle_bar(&win);
 	if (mode == MODE_IMAGE) {
@@ -112,13 +112,13 @@ bool cg_toggle_bar(arg_t _)
 	return true;
 }
 
-bool cg_prefix_external(arg_t _)
+LIBSXIV_EXPORT bool cg_prefix_external(arg_t _)
 {
 	extprefix = true;
 	return false;
 }
 
-bool cg_reload_image(arg_t _)
+LIBSXIV_EXPORT bool cg_reload_image(arg_t _)
 {
 	if (mode == MODE_IMAGE) {
 		load_image(fileidx);
@@ -132,7 +132,7 @@ bool cg_reload_image(arg_t _)
 	return true;
 }
 
-bool cg_remove_image(arg_t _)
+LIBSXIV_EXPORT bool cg_remove_image(arg_t _)
 {
 	remove_file(fileidx, true);
 	if (mode == MODE_IMAGE)
@@ -142,7 +142,7 @@ bool cg_remove_image(arg_t _)
 	return true;
 }
 
-bool cg_first(arg_t _)
+LIBSXIV_EXPORT bool cg_first(arg_t _)
 {
 	if (mode == MODE_IMAGE && fileidx != 0) {
 		load_image(0);
@@ -156,7 +156,7 @@ bool cg_first(arg_t _)
 	}
 }
 
-bool cg_n_or_last(arg_t _)
+LIBSXIV_EXPORT bool cg_n_or_last(arg_t _)
 {
 	int n = prefix != 0 && prefix - 1 < filecnt ? prefix - 1 : filecnt - 1;
 
@@ -172,7 +172,7 @@ bool cg_n_or_last(arg_t _)
 	}
 }
 
-bool cg_scroll_screen(arg_t dir)
+LIBSXIV_EXPORT bool cg_scroll_screen(arg_t dir)
 {
 	if (mode == MODE_IMAGE)
 		return img_pan(&img, dir, -1);
@@ -180,7 +180,7 @@ bool cg_scroll_screen(arg_t dir)
 		return tns_scroll(&tns, dir, true);
 }
 
-bool cg_zoom(arg_t d)
+LIBSXIV_EXPORT bool cg_zoom(arg_t d)
 {
 	if (mode == MODE_THUMB)
 		return tns_zoom(&tns, d);
@@ -192,12 +192,12 @@ bool cg_zoom(arg_t d)
 		return false;
 }
 
-bool cg_toggle_image_mark(arg_t _)
+LIBSXIV_EXPORT bool cg_toggle_image_mark(arg_t _)
 {
 	return mark_image(fileidx, !(files[fileidx].flags & FF_MARK));
 }
 
-bool cg_reverse_marks(arg_t _)
+LIBSXIV_EXPORT bool cg_reverse_marks(arg_t _)
 {
 	int i;
 
@@ -210,7 +210,7 @@ bool cg_reverse_marks(arg_t _)
 	return true;
 }
 
-bool cg_mark_range(arg_t _)
+LIBSXIV_EXPORT bool cg_mark_range(arg_t _)
 {
 	int d = markidx < fileidx ? 1 : -1, end, i;
 	bool dirty = false, on = !!(files[markidx].flags & FF_MARK);
@@ -220,7 +220,7 @@ bool cg_mark_range(arg_t _)
 	return dirty;
 }
 
-bool cg_unmark_all(arg_t _)
+LIBSXIV_EXPORT bool cg_unmark_all(arg_t _)
 {
 	int i;
 
@@ -232,7 +232,7 @@ bool cg_unmark_all(arg_t _)
 	return true;
 }
 
-bool cg_navigate_marked(arg_t n)
+LIBSXIV_EXPORT bool cg_navigate_marked(arg_t n)
 {
 	int d, i;
 	int new = fileidx;
@@ -259,7 +259,7 @@ bool cg_navigate_marked(arg_t n)
 	}
 }
 
-bool cg_change_gamma(arg_t d)
+LIBSXIV_EXPORT bool cg_change_gamma(arg_t d)
 {
 	if (img_change_gamma(&img, d * (prefix > 0 ? prefix : 1))) {
 		if (mode == MODE_THUMB)
@@ -270,7 +270,7 @@ bool cg_change_gamma(arg_t d)
 	}
 }
 
-bool ci_navigate(arg_t n)
+LIBSXIV_EXPORT bool ci_navigate(arg_t n)
 {
 	if (prefix > 0)
 		n *= prefix;
@@ -288,25 +288,25 @@ bool ci_navigate(arg_t n)
 	}
 }
 
-bool ci_cursor_navigate(arg_t _)
+LIBSXIV_EXPORT bool ci_cursor_navigate(arg_t _)
 {
 	return ci_navigate(ptr_third_x() - 1);
 }
 
-bool ci_alternate(arg_t _)
+LIBSXIV_EXPORT bool ci_alternate(arg_t _)
 {
 	load_image(alternate);
 	return true;
 }
 
-bool ci_navigate_frame(arg_t d)
+LIBSXIV_EXPORT bool ci_navigate_frame(arg_t d)
 {
 	if (prefix > 0)
 		d *= prefix;
 	return !img.multi.animate && img_frame_navigate(&img, d);
 }
 
-bool ci_toggle_animation(arg_t _)
+LIBSXIV_EXPORT bool ci_toggle_animation(arg_t _)
 {
 	bool dirty = false;
 
@@ -322,17 +322,17 @@ bool ci_toggle_animation(arg_t _)
 	return dirty;
 }
 
-bool ci_scroll(arg_t dir)
+LIBSXIV_EXPORT bool ci_scroll(arg_t dir)
 {
 	return img_pan(&img, dir, prefix);
 }
 
-bool ci_scroll_to_edge(arg_t dir)
+LIBSXIV_EXPORT bool ci_scroll_to_edge(arg_t dir)
 {
 	return img_pan_edge(&img, dir);
 }
 
-bool ci_drag(arg_t mode)
+LIBSXIV_EXPORT bool ci_drag(arg_t mode)
 {
 	int x, y, ox, oy;
 	float px, py;
@@ -378,42 +378,43 @@ bool ci_drag(arg_t mode)
 	return true;
 }
 
+LIBSXIV_EXPORT bool ci_set_zoom(arg_t zl)
 bool ci_set_zoom(arg_t zl)
 {
 	return img_zoom(&img, (prefix ? prefix : zl) / 100.0);
 }
 
-bool ci_fit_to_win(arg_t sm)
+LIBSXIV_EXPORT bool ci_fit_to_win(arg_t sm)
 {
 	return img_fit_win(&img, sm);
 }
 
-bool ci_rotate(arg_t degree)
+LIBSXIV_EXPORT bool ci_rotate(arg_t degree)
 {
 	img_rotate(&img, degree);
 	return true;
 }
 
-bool ci_flip(arg_t dir)
+LIBSXIV_EXPORT bool ci_flip(arg_t dir)
 {
 	img_flip(&img, dir);
 	return true;
 }
 
-bool ci_toggle_antialias(arg_t _)
+LIBSXIV_EXPORT bool ci_toggle_antialias(arg_t _)
 {
 	img_toggle_antialias(&img);
 	return true;
 }
 
-bool ci_toggle_alpha(arg_t _)
+LIBSXIV_EXPORT bool ci_toggle_alpha(arg_t _)
 {
 	img.alpha = !img.alpha;
 	img.dirty = true;
 	return true;
 }
 
-bool ci_slideshow(arg_t _)
+LIBSXIV_EXPORT bool ci_slideshow(arg_t _)
 {
 	if (prefix > 0) {
 		img.ss.on = true;
@@ -428,12 +429,12 @@ bool ci_slideshow(arg_t _)
 	return true;
 }
 
-bool ct_move_sel(arg_t dir)
+LIBSXIV_EXPORT bool ct_move_sel(arg_t dir)
 {
 	return tns_move_selection(&tns, dir, prefix);
 }
 
-bool ct_reload_all(arg_t _)
+LIBSXIV_EXPORT bool ct_reload_all(arg_t _)
 {
 	tns_free(&tns);
 	tns_init(&tns, files, &filecnt, &fileidx, &win);
@@ -449,7 +450,7 @@ bool ct_reload_all(arg_t _)
 #undef  T_CMD
 #define T_CMD(c) { MODE_THUMB, ct_##c },
 
-const cmd_t cmds[CMD_COUNT] = {
+const cmd_t cmds[CMD_COUNT] LIBSXIV_EXPORT = {
 #include "commands.lst"
 };
 
