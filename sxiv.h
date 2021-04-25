@@ -99,6 +99,15 @@ typedef enum {
 } dragmode_t;
 
 typedef enum {
+	QD_LT,
+	QD_RT,
+	QD_LB,
+	QD_RB,
+	QD_CENTER,
+	QD_COUNT
+} quarterdrag_t;
+
+typedef enum {
 	CURSOR_ARROW,
 	CURSOR_DRAG,
 	CURSOR_WATCH,

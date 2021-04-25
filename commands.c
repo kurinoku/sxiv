@@ -38,6 +38,8 @@ void slideshow(void);
 void set_timeout(timeout_f, int, bool);
 void reset_timeout(timeout_f);
 
+extern quarterdrag_t current_quarter_drag;
+
 extern appmode_t mode;
 extern img_t img;
 extern tns_t tns;
@@ -336,6 +338,7 @@ bool ci_drag(arg_t mode)
 {
 	int x, y, ox, oy;
 	float px, py;
+	float l, r, t, b;
 	XEvent e;
 
 	if ((int)(img.w * img.zoom) <= win.w && (int)(img.h * img.zoom) <= win.h)
@@ -349,10 +352,34 @@ bool ci_drag(arg_t mode)
 
 	for (;;) {
 		if (mode == DRAG_ABSOLUTE) {
-			px = MIN(MAX(0.0, x - win.w*0.1), win.w*0.8) / (win.w*0.8)
-			   * (win.w - img.w * img.zoom);
-			py = MIN(MAX(0.0, y - win.h*0.1), win.h*0.8) / (win.h*0.8)
-			   * (win.h - img.h * img.zoom);
+			if (current_quarter_drag == QD_CENTER) {
+				l = 0.1;
+				r = 0.8;
+				t = 0.1;
+				b = 0.8;
+			} else {
+				if (current_quarter_drag == QD_LT || current_quarter_drag == QD_RT) {
+					t = 0.1;
+					b = 0.2;
+				} else {
+					t = 0.6;
+					b = 0.8;
+				}
+
+				if (current_quarter_drag == QD_LT || current_quarter_drag == QD_LB) {
+					l = 0.1;
+					r = 0.2;
+				} else {
+					l = 0.6;
+					r = 0.8;
+				}
+			}
+
+			px = MIN(MAX(0.0, x - win.w*l), win.w*r) / (win.w*(r-l+0.1));
+			py = MIN(MAX(0.0, y - win.h*t), win.w*b) / (win.w*(b-t+0.1));
+
+			px = px * (win.w - img.w * img.zoom);
+			py = py * (win.h - img.h * img.zoom);
 		} else {
 			px = img.x + x - ox;
 			py = img.y + y - oy;
@@ -375,6 +402,12 @@ bool ci_drag(arg_t mode)
 	set_timeout(reset_cursor, TO_CURSOR_HIDE, true);
 	reset_cursor();
 
+	return true;
+}
+
+bool ci_change_quarter(arg_t _) {
+	int new_cqd = ((int)current_quarter_drag + 1) % (int)QD_COUNT;
+	current_quarter_drag = (quarterdrag_t)new_cqd;
 	return true;
 }
 

@@ -47,6 +47,8 @@ void animate(void);
 void slideshow(void);
 void clear_resize(void);
 
+quarterdrag_t current_quarter_drag;
+
 appmode_t mode;
 arl_t arl;
 img_t img;
@@ -938,6 +940,9 @@ int main(int argc, char **argv)
 		tns.thumbs = NULL;
 		load_image(fileidx);
 	}
+
+	current_quarter_drag = QD_CENTER;
+
 	win_open(&win);
 	win_set_cursor(&win, CURSOR_WATCH);
 

@@ -147,6 +147,7 @@ static const button_t buttons[] = {
 	{ 0,            3,                g_switch_mode,        None },
 	{ 0,            4,                g_zoom,               +1 },
 	{ 0,            5,                g_zoom,               -1 },
+	{ 0,            8,                i_change_quarter,     None }
 };
 
 #endif
