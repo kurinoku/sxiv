@@ -1,5 +1,10 @@
 ![sxiv](http://muennich.github.com/sxiv/img/logo.png "sxiv")
 
+!! THIS BRANCH AIMS TO TRANSFORM SXIV INTO A SHARED LIBRARY !!
+
+
+Probably won't be in active development any time soon.
+
 **Simple X Image Viewer**
 
 The sole purpose of sxiv is to be the perfect image viewer for me. It is free
@@ -74,6 +79,9 @@ the following command:
 
     $ make config.h
 
+To build libsxiv use:
+
+    $ make -f Makefile.so
 
 Usage
 -----
